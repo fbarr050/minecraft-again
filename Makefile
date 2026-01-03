@@ -46,7 +46,7 @@ SRC  = $(shell find src -name "*.cpp")
 OBJ  = $(SRC:.cpp=.o)
 BIN = bin
 
-BGFX_BIN = lib/bgfx/.build/$(BGFX_DEPS_TARGET)/bin
+BGFX_BIN = lib/bgfx/.build/osx-arm64/bin
 BGFX_CONFIG = Debug
 
 LDFLAGS += -lstdc++
@@ -60,7 +60,7 @@ LDFLAGS += lib/glfw/src/libglfw3.a
 SHADERS_PATH		= res/shaders
 SHADERS				= $(shell find $(SHADERS_PATH)/* -maxdepth 1 | grep -E ".*/(vs|fs).*.sc")
 SHADERS_OUT			= $(SHADERS:.sc=.$(SHADER_TARGET).bin)
-SHADERC				= lib/bgfx/.build/$(BGFX_DEPS_TARGET)/bin/shaderc$(BGFX_CONFIG)
+SHADERC				= lib/bgfx/.build/osx-arm64/bin/shaderc$(BGFX_CONFIG)
 SHADER_TARGET	= metal
 SHADER_PLATFORM = osx
 
@@ -71,11 +71,20 @@ CCFLAGS += -DSHADER_TARGET_$(SHADER_TARGET) -DSHADER_PLATFORM_$(SHADER_PLATFORM)
 
 all: dirs libs shaders build
 
+#libs:
+#	export LD_PATH="$(FRAMEWORKS)"
+#	cd lib/bx && make $(BGFX_DEPS_TARGET)
+#	cd lib/bimg && make $(BGFX_DEPS_TARGET)
+#	cd lib/bgfx && make $(BGFX_TARGET)
+#	cd lib/glfw && cmake . && make
+#	cd lib/noise && make
+#	export LD_PATH=""
+
 libs:
 	export LD_PATH="$(FRAMEWORKS)"
-	cd lib/bx && make $(BGFX_DEPS_TARGET)
-	cd lib/bimg && make $(BGFX_DEPS_TARGET)
-	cd lib/bgfx && make $(BGFX_TARGET)
+	$(MAKE) -C lib/bx/.build/projects/gmake-osx-arm64 config=debug
+	$(MAKE) -C lib/bimg/.build/projects/gmake-osx-arm64 config=debug
+	$(MAKE) -C lib/bgfx/.build/projects/gmake-osx-arm64 config=debug
 	cd lib/glfw && cmake . && make
 	cd lib/noise && make
 	export LD_PATH=""
