@@ -33,10 +33,9 @@ FRAMEWORKS += -framework IOKit
 BGFX_TARGET =
 
 ifeq ($(UNAME_S), Darwin)
-	LDFLAGS += $(FRAMEWORKS)
-	# TODO: select based on ($ arch)
-	BGFX_DEPS_TARGET=osx-arm64
-	BGFX_TARGET=osx-arm
+    LDFLAGS += $(FRAMEWORKS)
+    BGFX_DEPS_TARGET=osx
+    BGFX_TARGET=osx
 endif
 
 ifeq ($(UNAME_S), Linux)
